@@ -1,9 +1,10 @@
-from models.user import User
 from sqlalchemy.orm import Session
-from dto import user
 
-def creater_user(data: user.User, db: Session):
-    user = User(name=data.name)
+from db_models.user import User as UserModelDB
+from dto.user import User as UserDTO
+
+def creater_user(data: UserDTO, db: Session):
+    user = UserModelDB(name=data.name)
     try:
         db.add(user)
         db.commit()
@@ -13,10 +14,10 @@ def creater_user(data: user.User, db: Session):
     return user
 
 def get_user(id: int, db: Session):
-    return db.query(User).filter(User.id==id).first()
+    return db.query(UserModelDB).filter(UserModelDB.id==id).first()
 
-def update(data: user.User, db: Session, id: int):
-    user = db.query(User).filter(User.id==id).first()
+def update(data: UserDTO, db: Session, id: int):
+    user = db.query(UserModelDB).filter(UserModelDB.id==id).first()
     user.name = data.name
     db.add(user)
     db.commit()
@@ -24,6 +25,6 @@ def update(data: user.User, db: Session, id: int):
     return user
 
 def remove(db: Session, id: int):
-    user = db.query(User).filter(User.id==id).delete()
+    user = db.query(UserModelDB).filter(UserModelDB.id==id).delete()
     db.commit()
     return user
